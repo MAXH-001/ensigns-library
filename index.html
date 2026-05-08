@@ -2378,6 +2378,11 @@
     document.getElementById('student-avatar').textContent   = initials;
     document.getElementById('student-nav-name').textContent = currentUser.name || 'Student';
     document.getElementById('student-nav-role').textContent = currentUser.role || 'Student';
+    // Re-enable tabs that were hidden in guest mode (upload, announcements, etc.)
+    ['home','upload','vote','announcements'].forEach(t => {
+      const e = document.getElementById('student-tab-'+t);
+      if (e) e.style.display = '';
+    });
     // Upload tab visible for everyone
     document.getElementById('upload-tab-btn').style.display = 'flex';
     // Reload announcements
@@ -3214,6 +3219,7 @@
   }
 
   async function doUpload() {
+    if (!currentUser) { pendingAction = doUpload; showLoginSheet(); return; }
     const courseId  = document.getElementById('upload-course').value;
     const title     = document.getElementById('upload-title').value.trim();
     const folder    = (document.getElementById('upload-folder').value || '').trim();
