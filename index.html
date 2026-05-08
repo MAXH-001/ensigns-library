@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ensigns Edu Hub</title>
 
   <!-- PWA -->
@@ -81,25 +81,153 @@
     }
     .theme-toggle:active { transform: scale(0.88); }
 
-    html { height: 100%; background: var(--surface); }
+    html { height: 100%; background: var(--accent); }
 
     body {
       height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
-      max-width: 430px;
-      margin: 0 auto;
-      overflow: hidden;
       font-size: 14px;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    /* ===== DESKTOP SHELL ===== */
+    #app-shell {
+      display: flex;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Left branding panel — desktop only */
+    #desktop-sidebar {
+      display: none;
+    }
+
+    /* The app pane — mobile: full width, desktop: fixed 430px card */
+    #app-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+
+    @media (min-width: 900px) {
+      html { background: var(--accent); }
+
+      body { background: var(--accent); overflow: hidden; }
+
+      #app-shell {
+        align-items: stretch;
+        justify-content: center;
+        gap: 0;
+      }
+
+      #desktop-sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        flex: 1;
+        padding: 60px 48px;
+        background: var(--accent) url('logo.png') center/cover no-repeat;
+        color: #fff;
+        max-width: 520px;
+        gap: 28px;
+        position: relative;
+      }
+
+      /* Dark overlay so text stays readable over the logo image */
+      #desktop-sidebar::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 83, 45, 0.72);
+        z-index: 0;
+      }
+
+      #desktop-sidebar > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      #desktop-sidebar .ds-logo {
+        font-family: 'Fraunces', serif;
+        font-size: 36px;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+        letter-spacing: -1px;
+      }
+      #desktop-sidebar .ds-logo span { color: var(--gold, #ca8a04); }
+
+      #desktop-sidebar .ds-tagline {
+        font-size: 15px;
+        color: rgba(255,255,255,0.75);
+        line-height: 1.7;
+        max-width: 340px;
+      }
+
+      #desktop-sidebar .ds-features {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 8px;
+      }
+
+      #desktop-sidebar .ds-feat {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.85);
+      }
+
+      #desktop-sidebar .ds-feat-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.12);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 17px; flex-shrink: 0;
+      }
+
+      #desktop-sidebar .ds-divider {
+        width: 48px; height: 3px;
+        background: var(--gold, #ca8a04);
+        border-radius: 2px;
+      }
+
+      #app-pane {
+        flex: none;
+        width: 430px;
+        height: 100vh;
+        box-shadow: -8px 0 40px rgba(0,0,0,0.25), 8px 0 40px rgba(0,0,0,0.15);
+        border-left: 1px solid rgba(255,255,255,0.08);
+        border-right: 1px solid rgba(255,255,255,0.08);
+        position: relative;
+      }
+    }
+
+    /* On very wide screens, give sidebar more breathing room */
+    @media (min-width: 1200px) {
+      #desktop-sidebar {
+        padding: 80px 64px;
+        max-width: 600px;
+      }
+      #desktop-sidebar .ds-logo { font-size: 44px; }
     }
 
     .screen { display: none; flex-direction: column; height: 100dvh; max-height: 100dvh; overflow: hidden; }
     .screen.active { display: flex; }
 
+
     /* ===== LOADING ===== */
     #loading-overlay {
-      display: none; position: fixed; inset: 0;
+      display: none; position: absolute; inset: 0;
       background: rgba(240,247,255,0.93);
       z-index: 9999; flex-direction: column;
       align-items: center; justify-content: center;
@@ -118,7 +246,7 @@
 
     /* ===== MODAL ===== */
     #modal-overlay {
-      display: none; position: fixed; inset: 0;
+      display: none; position: absolute; inset: 0;
       background: rgba(15,23,42,0.45);
       z-index: 9000; align-items: flex-end; justify-content: center;
       backdrop-filter: blur(4px);
@@ -810,7 +938,7 @@
 
     /* ===== LIGHTBOX ===== */
     .lightbox-overlay {
-      display: none; position: fixed; inset: 0; z-index: 1000;
+      display: none; position: absolute; inset: 0; z-index: 1000;
       background: rgba(0,0,0,0.96);
       flex-direction: column; align-items: center; justify-content: center;
     }
@@ -992,9 +1120,26 @@
   </style>
 </head>
 <body>
+<div id="app-shell">
+
+<!-- ===== DESKTOP SIDEBAR ===== -->
+<div id="desktop-sidebar">
+  <div class="ds-logo">Ensigns <span>Edu Hub</span></div>
+  <div class="ds-divider"></div>
+  <div class="ds-tagline">Your all-in-one academic resource platform. Browse course materials, upload notes, and stay informed — built for students, by students.</div>
+  <div class="ds-features">
+    <div class="ds-feat"><div class="ds-feat-icon">📚</div><div>Browse and download course materials by level</div></div>
+    <div class="ds-feat"><div class="ds-feat-icon">📤</div><div>Upload notes, past questions and handouts</div></div>
+    <div class="ds-feat"><div class="ds-feat-icon">📢</div><div>Get the latest notices and announcements</div></div>
+    <div class="ds-feat"><div class="ds-feat-icon">🔒</div><div>Secure login with admin-approved access</div></div>
+  </div>
+</div>
+
+<!-- ===== APP PANE ===== -->
+<div id="app-pane">
 
 <!-- PWA INSTALL BANNER -->
-<div id="pwa-install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999;
+<div id="pwa-install-banner" style="display:none; position:absolute; bottom:0; left:0; right:0; z-index:9999;
   background:var(--surface); border-top:1.5px solid var(--border2);
   padding:14px 16px; align-items:center; gap:12px;
   box-shadow:0 -4px 24px rgba(20,83,45,0.13);">
@@ -1057,7 +1202,7 @@
 <!--  LOGIN BOTTOM SHEET (pops up when action requires login)  -->
 <!-- ========================================================= -->
 <div id="login-sheet-overlay" onclick="dismissLoginSheet()" style="
-  display:none; position:fixed; inset:0;
+  display:none; position:absolute; inset:0;
   background:rgba(15,23,42,0.5);
   z-index:9500; align-items:flex-end; justify-content:center;
   backdrop-filter:blur(4px);">
@@ -4742,5 +4887,7 @@
   };
 
 </script>
+</div><!-- /app-pane -->
+</div><!-- /app-shell -->
 </body>
 </html>
